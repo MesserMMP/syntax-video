@@ -1,0 +1,74 @@
+# --- Python & venv ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.env
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+*.log
+
+# --- System files ---
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*.bak
+
+# --- IDE / Editors ---
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# --- Build / cache ---
+build/
+dist/
+*.egg
+*.egg-info/
+.eggs/
+.cache/
+.pytest_cache/
+.hypothesis/
+
+# --- Data / artifacts ---
+weights/
+data/
+datasets/
+checkpoints/
+runs/
+lightning_logs/
+experiments/
+*.pt
+*.ckpt
+*.pth
+*.npz
+*.npy
+*.csv
+*.json
+*.zip
+*.tar
+*.tar.gz
+*.pkl
+
+# --- Gradio / HF specific ---
+gradio_cached_examples/
+gradio_tmp/
+outputs/
+tmp/
+uploads/
+logs/
+*.db
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*.ipynb
+
+# --- OS / backup ---
+*.bak
+*.old
+*~

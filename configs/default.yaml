@@ -1,0 +1,65 @@
+# configs/default.yaml — unified config for inference + artery classifier
+
+# ===== General =====
+seed: 42
+device: auto                 # 'cpu' | 'cuda' | 'mps' | 'auto'
+precision: bf16              # 'bf16' | 'fp16' | 'fp32'
+
+# Video clip packing for SYNTAX inference
+num_classes: 2               # [p(stenosis>=thr), log(1+score)]
+frames_per_clip: 32
+video_size: [256, 256]
+
+# ===== Backbone / Head =====
+backbone: r3d_18             # torchvision.models.video.r3d_18
+backbone_weights: DEFAULT    # torchvision default Kinetics weights
+
+# Head variant: mean_out | mean | lstm_mean | lstm_last | gru_mean | gru_last | bert_mean | bert_cls | bert_cls2
+variant: lstm_mean
+
+a_rnn:
+  hidden_div: 4              # hidden_size = in_features // hidden_div
+  dropout: 0.2
+
+bert:
+  nhead: 4
+  num_layers: 1
+  ff_div: 4
+  dropout: 0.2
+
+# ===== Thresholds (reporting) =====
+thresholds:
+  left: 15.0
+  right: 5.0
+  both: 22.0
+
+# ===== Ensemble weights (leave empty to auto-discover in weights/{left,right}) =====
+weights:
+  left: []                    # e.g. ["weights/left/Left_fold00.pt", ...]
+  right: []                   # e.g. ["weights/right/Right_fold00.pt", ...]
+
+# Optional: HF model repo to auto-fetch weights if local not found.
+# Can be overridden by env var WEIGHTS_REPO.
+weights_repo: "MesserMMP/syntax-video-weights"
+
+# ===== Artery classifier (do NOT change preprocessing; keep identical to training) =====
+classifier:
+  # path to Lightning/pt weights; must exist in the runtime
+  weights: "assets/r3d_art.pt"
+  # subdir in weights_repo
+  hf_subdir: "classifier"
+
+  # preprocessing params used in the classifier pipeline
+  video_size: [224, 224]
+  mean: [0.485, 0.456, 0.406]
+  std:  [0.229, 0.224, 0.225]
+
+  # routing thresholds on sigmoid probability:
+  #   prob <= left_max  -> LEFT
+  #   prob >= right_min -> RIGHT
+  thresholds:
+    left_max: 0.10
+    right_min: 0.90
+
+# ===== Inference loader (not strictly used, kept for completeness) =====
+batch_size: 1
